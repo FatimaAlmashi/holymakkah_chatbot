@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Events } from 'ionic-angular';
-import { map } from 'rxjs/operators/map';
+import { Injectable } from "@angular/core";
+import { Events } from "ionic-angular";
+import { map } from "rxjs/operators/map";
 import { HttpClient } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 
@@ -21,56 +21,59 @@ export class UserInfo {
   avatar?: string;
 }
 
-export const userAvatar = 'https://github.com/HsuanXyz/ionic3-chat/blob/master/src/assets/user.jpg?raw=true';
-export const toUserAvatar = 'https://github.com/HsuanXyz/ionic3-chat/blob/master/src/assets/to-user.jpg?raw=true';
+export const userAvatar =
+  "https://img.icons8.com/ultraviolet/80/000000/bot.png";
+
+export const toUserAvatar =
+  "https://img.icons8.com/ultraviolet/80/000000/user-male.png";
 
 @Injectable()
 export class ChatService {
-
-
-
-  constructor(private http: HttpClient,
-              private events: Events) {
-  }
+  constructor(private http: HttpClient, private events: Events) {}
 
   mockNewMsg(msg) {
     const mockMsg: ChatMessage = {
       messageId: Date.now().toString(),
-      userId: '210000198410281948',
-      userName: 'Hancock',
+      userId: "210000198410281948",
+      userName: "Hancock",
       userAvatar: toUserAvatar,
-      toUserId: '140000198202211138',
+      toUserId: "140000198202211138",
       time: Date.now(),
       message: msg.message,
-      status: 'success'
+      status: "success"
     };
 
     setTimeout(() => {
-      this.events.publish('chat:received', mockMsg, Date.now())
-    }, Math.random() * 1800)
+      this.events.publish("chat:received", mockMsg, Date.now());
+    }, Math.random() * 1800);
   }
 
   getMsgList(): Observable<ChatMessage[]> {
-    const msgListUrl = 'https://raw.githubusercontent.com/HsuanXyz/ionic3-chat/master/src/assets/mock/msg-list.json';
-    return this.http.get<any>(msgListUrl)
-    .pipe(map(response => response.array.map(msg => ({
-      ...msg,
-      userAvatar: msg.userAvatar === './assets/user.jpg' ? userAvatar : toUserAvatar
-    }))));
+    const msgListUrl =
+      "https://raw.githubusercontent.com/HsuanXyz/ionic3-chat/master/src/assets/mock/msg-list.json";
+    return this.http.get<any>(msgListUrl).pipe(
+      map(response =>
+        response.array.map(msg => ({
+          ...msg,
+          userAvatar:
+            msg.userAvatar === "./assets/user.jpg" ? userAvatar : toUserAvatar
+        }))
+      )
+    );
   }
 
   sendMsg(msg: ChatMessage) {
-    return new Promise(resolve => setTimeout(() => resolve(msg), Math.random() * 1000))
-    .then(() => this.mockNewMsg(msg));
+    return new Promise(resolve =>
+      setTimeout(() => resolve(msg), Math.random() * 1000)
+    ).then(() => this.mockNewMsg(msg));
   }
 
   getUserInfo(): Promise<UserInfo> {
     const userInfo: UserInfo = {
-      id: '140000198202211138',
-      name: 'Luff',
+      id: "140000198202211138",
+      name: "Luff",
       avatar: userAvatar
     };
     return new Promise(resolve => resolve(userInfo));
   }
-
 }
